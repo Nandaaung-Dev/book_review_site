@@ -22,7 +22,8 @@ class BookDetailResource extends JsonResource
             'long_description' => $this->long_description,
             'short_description' => $this->short_description,
             'published_at' => $this->published_at,
-            'review' => $this->reviews,
+            'reviews' => $this->reviews,
+            'average_rating' => $this->averageRating(),
         ];
     }
 }

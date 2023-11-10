@@ -25,14 +25,6 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        // $validateData = $request->validate([
-        //     'title' => 'required',
-        //     'short_description' => 'required',
-        //     'long_description' => 'required',
-        //     'published_at' => 'required',
-        //     'user_id' => 'required',
-        // ]);
-
         $request->validate(
             [
                 'title' => 'required',
@@ -60,8 +52,14 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        $book = Book::find($id);
-        return ResponseHelper::success(new BookDetailResource($book));
+
+        $book = Book::with('reviews')->find($id);
+
+        if ($book) {
+            return ResponseHelper::success(new BookDetailResource($book));
+        } else {
+            return response()->json(['message' => 'Book not found'], 404);
+        }
     }
 
     /**
