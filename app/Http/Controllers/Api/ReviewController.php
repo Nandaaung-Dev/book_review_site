@@ -42,13 +42,12 @@ class ReviewController extends Controller
                 return response()->json(['message' => 'You have already reviewed this book.'], 403);
             } else {
                 // Create a new review
-                $review = new Review([
-                    'user_id' => auth()->user()->id,
-                    'book_id' => $request->book_id,
-                    'rating' => $request->rating,
-                    'comment' => $request->comment,
-                ]);
-                $book->reviews()->save($review);
+                $review = new Review();
+                $review->rating = $request->rating;
+                $review->comment = $request->comment;
+                $review->book_id = $request->book_id;
+                $review->user_id = auth()->user()->id;
+                $review->save();
 
                 return response()->json(['message' => 'Review saved successfully!']);
             }
