@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\ResponseHelper;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\BookDetailResource;
-use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use App\Helpers\ResponseHelper;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\BookResource;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\BookDetailResource;
 
 class BookController extends Controller
 {
@@ -31,19 +32,14 @@ class BookController extends Controller
                 'short_description' => 'required',
                 'long_description' => 'required',
                 'published_at' => 'required',
-                'user_id' => 'required',
             ],
-            [
-                'user_id.required' => "The user field is required."
-            ]
         );
-
         $book = new Book();
         $book->title = $request->title;
         $book->short_description = $request->short_description;
         $book->long_description = $request->long_description;
         $book->published_at = $request->published_at;
-        $book->user_id = $request->user_id;
+        $book->user_id = auth()->user()->id;
         $book->save();
     }
 
