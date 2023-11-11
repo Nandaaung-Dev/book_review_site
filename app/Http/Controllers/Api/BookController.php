@@ -17,7 +17,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::orderBy('title')->get();
+        $books = Book::latest()->get();
         return BookResource::collection($books)->additional(['message' => 'success']);
     }
 
@@ -28,7 +28,7 @@ class BookController extends Controller
     {
         $request->validate(
             [
-                'title' => 'required',
+                'title' => 'required|unique:books,title',
                 'short_description' => 'required',
                 'long_description' => 'required',
                 'published_at' => 'required',
@@ -41,6 +41,8 @@ class BookController extends Controller
         $book->published_at = $request->published_at;
         $book->user_id = auth()->user()->id;
         $book->save();
+
+        return response()->json(['message' => 'Book saved successfully!']);
     }
 
     /**

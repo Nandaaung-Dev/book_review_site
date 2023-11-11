@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Book;
-use App\Models\User;
 use App\Models\Review;
 use Illuminate\Http\Request;
-use App\Http\Resources\BookResource;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
@@ -14,7 +13,7 @@ class ReviewController extends Controller
 
     public function index()
     {
-        $reviews =  Review::all();
+        $reviews =  Review::latest()->get();
         return $reviews;
     }
     public function store(Request $request)
