@@ -48,4 +48,12 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    public function logout(Request $request)
+    {
+        /** @var \App\Models\User $user **/  $user = Auth::user();
+        $user->tokens()->delete();
+
+        return response()->json(['message' => 'Successfully Logout']);
+    }
 }

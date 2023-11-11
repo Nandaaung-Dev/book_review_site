@@ -42,7 +42,7 @@ class BookController extends Controller
         $book->user_id = auth()->user()->id;
         $book->save();
 
-        return response()->json(['message' => 'Book saved successfully!']);
+        return response()->json(['message' => 'Book saved successfully!'], 201);
     }
 
     /**
@@ -65,7 +65,23 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+
+        // Check if the authenticated user is the author of the book
+        if (auth()->user()->id !== $book->user_id) {
+            return response()->json(['message' => 'Only author can update.'], 403);
+        }
+
+        $request->validate([
+            'title' => 'required',
+            'short_description' => 'required',
+            'long_description' => 'required',
+            'published_at' => 'required',
+        ]);
+
+        $book->update($request->all());
+
+        return response()->json(['message' => 'Book updated successfully']);
     }
 
     /**
@@ -73,6 +89,14 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+
+        // Check if the authenticated user is the author of the book
+        if (auth()->user()->id !== $book->user_id) {
+            return response()->json(['message' => 'Only author can delete.'], 403);
+        }
+
+        $book->delete();
+        return response()->json(['message' => 'Book deleted successfully']);
     }
 }
